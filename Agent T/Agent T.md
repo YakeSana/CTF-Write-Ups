@@ -1,124 +1,89 @@
-![Uma imagem contendo Logotipo Descrição gerada
-automaticamente](./media/image1.png){width="5.905555555555556in"
-height="2.3361111111111112in"}
+![Logotipo Guardian](./media/image1.png)
 
-Relatório de CTF
+# Relatório de CTF: Agent T -- TryHackMe
 
-Agent T -- TryHackMe
+## Informações do Documento
 
-+:-----------------------------------:+:-----------------------------------:+
-| **Informações do documento**                                              |
-+-------------------------------------+-------------------------------------+
-| **Referência**                      | CTF de estudo -- Mitchell Santana   |
-|                                     | Miyake                              |
-+-------------------------------------+-------------------------------------+
-| **N° Revisão**                      | 1                                   |
-+-------------------------------------+-------------------------------------+
-| **Data de publicação**              | 10/10/2025                          |
-+-------------------------------------+-------------------------------------+
-| **Link**                            | https://tryhackme.com/room/agentt   |
-+-------------------------------------+-------------------------------------+
+| Campo | Detalhe |
+| :--- | :--- |
+| **Referência** | CTF de estudo -- Mitchell Santana Miyake |
+| **N° Revisão** | 1 |
+| **Data de publicação** | 10/10/2025 |
+| **Link** | https://tryhackme.com/room/agentt |
 
-  ----------------------- ----------------------- -----------------------
-  **Redação**             Mitchell Santana Miyake Estudante
+## Equipe Responsável
 
-  **Revisão**             Nome do revisor         Orientador
+| Função | Nome | Cargo |
+| :--- | :--- | :--- |
+| **Redação** | Mitchell Santana Miyake | Estudante |
+| **Revisão** | Nome do revisor | Orientador |
+| **Aprovação** | Nome do aprovador | Diretor |
 
-  **Aprovação**           Nome do aprovador       Diretor
-  ----------------------- ----------------------- -----------------------
+## Histórico de Revisões
 
-+:-----------------------:+:-----------------------:+:---------------------------------------------:+
-| **Histórico de revisões**                                                                         |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **N°**                  | **Entregas**            | **Descrição**                                 |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **0**                   | 10/10/2025              | Produção                                      |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **1**                   | DD/MM/AAAA              | Revisão                                       |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **2**                   | DD/MM/AAAA              | Aprovação                                     |
-+-------------------------+-------------------------+-----------------------------------------------+
+| N° | Entregas | Descrição |
+| :---: | :--- | :--- |
+| **0** | 10/10/2025 | Produção |
+| **1** | DD/MM/AAAA | Revisão |
+| **2** | DD/MM/AAAA | Aprovação |
 
-**Sumário**
+---
 
-[Contextualização [2](#_Toc77936455)](#_Toc77936455)
+## Sumário
+* [Contextualização](#contextualização)
+* [Desenvolvimento](#desenvolvimento)
+  * [Task 1: Find the Flag](#task-1-find-the-flag)
+* [Conclusão](#conclusão)
+* [Referências](#referências)
 
-[Desenvolvimento [3](#_Toc673335303)](#_Toc673335303)
+---
 
-[Task 1: Find the Flag [3](#_Toc933604461)](#_Toc933604461)
+## Contextualização
 
-[Conclusão [6](#_Toc854997685)](#_Toc854997685)
+O CTF Agent T sugere que há algo errado com o servidor e desafia o atacante a obter acesso a ele e obter uma flag, por meio de varredura de portas, análise de requisições web e escalonamento de privilégios.
 
-[Referências [7](#_Toc1591406912)](#_Toc1591406912)
+## Desenvolvimento
 
-[]{#_Toc77936455 .anchor}C**ontextualização**
+### Task 1: Find the Flag
 
-O CTF Agent T sugere que há algo errado com o servidor e desafia o
-atacante a obter acesso a ele e obter uma flag, por meio de varredura de
-portas, análise de requisições web e escalonamento de privilégios.
+Utilizando o nmap é possível observar que o servidor está com a porta 80 aberta, logo aceita requisições HTTP.
 
-[]{#_Toc673335303 .anchor}Desenvolvimento
+![Resultado Nmap](./media/image2.png)
 
-[]{#_Toc933604461 .anchor}Task 1: Find the Flag
+Logo acessamos a máquina virtual pelo navegador e somos recebidos com um dashboard de administrador.
 
-Utilizando o nmap é possível observar que o servidor está com a porta 80
-aberta, logo aceita requisições HTTP.
+![Dashboard Administrador](./media/image3.png)
 
-![](./media/image2.png){width="5.90625in" height="2.4479166666666665in"}
+Ao clicar no ícone do canto esquerdo superior a seguinte tela aparece, demonstrando que há algum acesso mal configurado ou vulnerabilidade, visto que o `index.html` não está acessível.
 
-Logo acessamos a máquina virtual pelo navegador e somos recebidos com um
-dashboard de administrador.![](./media/image3.png){width="5.90625in"
-height="2.8333333333333335in"}
+![Erro de Acesso](./media/image4.png)
 
-Ao clicar no ícone do canto esquerdo superior a seguinte tela aparece,
-demonstrando que há algum acesso mal configurado ou vulnerabilidade,
-visto que o index.html não está acessível.
+Seguindo a dica da AI do TryHackMe de olhar com atenção os headers, utilizamos as ferramentas de desenvolvedor, que nos possibilitaram observar que o header da requisição que obtém o html do site apresenta a seguinte característica: `X-Powered-By: PHP/8.1.0-dev`.
 
-![](./media/image4.png){width="5.90625in" height="4.15625in"}
+![Headers na ferramenta de desenvolvedor](./media/image5.png)
 
-Seguindo a dica da AI do TryHackMe de olhar com atenção os headers,
-utilizamos as ferramentas de desenvolvedor, que nos possibilitaram
-observar que o header da requisição que obtém o html do site apresenta a
-seguinte característica "X-Powered-By: PHP/8.1.0-dev".
+Após uma busca na internet sobre vulnerabilidades desta versão do PHP, encontrei um exploit, o qual se trata de um código python, como consta na referência.
 
-![](./media/image5.png){width="5.90625in" height="2.6979166666666665in"}
+![Pesquisa de Exploit](./media/image6.png)
 
-Após uma busca na internet sobre vulnerabilidades desta versão do PHP,
-encontrei um exploit, o qual se trata de um código python, como consta
-na referência.
+![Código do Exploit](./media/image7.png)
 
-![](./media/image6.png){width="5.90625in" height="1.75in"}
+A execução do código e a inserção da url do servidor resultam no escalonamento de privilégio, como demonstra a execução dos comandos `id` e `whoami`.
 
-![](./media/image7.png){width="5.854166666666667in" height="5.90625in"}
+![Escalonamento de privilégio no terminal](./media/image8.png)
 
-A execução do código e a inserção da url do servidor resultam no
-escalonamento de privilégio, como demonstra a execução dos comandos id e
-whoami.
+Após obter privilégios, basta achar a flag dentro do servidor com comandos como o `find` e abri-la com o `cat`.
 
-![](./media/image8.png){width="5.90625in" height="2.0729166666666665in"}
+![Busca pela Flag](./media/image9.png)
 
-Após obter privilégios basta achar a flag dentro do servidor com
-comandos como o find e abri-la com o cat.
+![Flag encontrada](./media/image10.png)
 
-![](./media/image9.png){width="3.6346041119860018in"
-height="4.50945428696413in"}
+## Conclusão
 
-![](./media/image10.png){width="5.90625in"
-height="0.5833333333333334in"}
+Apesar do desafio proposto ser do nível fácil ele me proporcionou um aprendizado significativo em investigação digital e resolução de problemas. Ao longo das etapas, foi necessário pesquisar, testar abordagens e interpretar pistas, o que estimulou o desenvolvimento do meu pensamento crítico. Dito isso, ele é um ótimo CTF para estimular a busca ativa de informação e interpretação de informações.
 
-[]{#_Toc854997685 .anchor}Conclusão
+## Referências
 
-Apesar do desafio proposto ser do nível fácil ele me proporcionou um
-aprendizado significativo em investigação digital e resolução de
-problemas. Ao longo das etapas, foi necessário pesquisar, testar
-abordagens e interpretar pistas, o que estimulou o desenvolvimento do
-meu pensamento crítico. Dito isso, ele é um ótimo CTF para estimular a
-busca ativa de informação e interpretação de informações.
-
-[]{#_Toc1591406912 .anchor}Referências
-
-- <https://www.exploit-db.com/exploits/49933>
-
-- <https://tryhackme.com/echo>
-
-- https://chatgpt.com
+* https://www.exploit-db.com/exploits/49933
+* https://tryhackme.com/echo
+* https://chatgpt.com

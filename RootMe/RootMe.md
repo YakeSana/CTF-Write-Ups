@@ -1,202 +1,139 @@
-![Uma imagem contendo Logotipo Descrição gerada
-automaticamente](./media/image1.png){width="5.905555555555556in"
-height="2.3361111111111112in"}
+![Logo](./media/image1.png)
 
-Relatório de CTF
+# Relatório de CTF: RootMe -- TryHackMe
 
-RootMe -- TryHackMe
+## Informações do Documento
 
-+:-----------------------------------:+:------------------------------------:+
-| **Informações do documento**                                               |
-+-------------------------------------+--------------------------------------+
-| **Referência**                      | RootMe -- Mitchell Santana Miyake    |
-+-------------------------------------+--------------------------------------+
-| **N° Revisão**                      | 1                                    |
-+-------------------------------------+--------------------------------------+
-| **Data de publicação**              | 13/11/2025                           |
-+-------------------------------------+--------------------------------------+
-| **Link**                            | <https://tryhackme.com/room/rrootme> |
-+-------------------------------------+--------------------------------------+
+| Campo | Detalhe |
+| :--- | :--- |
+| **Referência** | RootMe -- Mitchell Santana Miyake |
+| **N° Revisão** | 1 |
+| **Data de publicação** | 13/11/2025 |
+| **Link** | https://tryhackme.com/room/rrootme |
 
-  ----------------------- ----------------------- -----------------------
-  **Redação**             Nome do realizador      Mitchell Santana Miyake
+## Equipe Responsável
 
-  **Revisão**             Nome do revisor         Orientador
+| Função | Nome | Cargo |
+| :--- | :--- | :--- |
+| **Redação** | Nome do realizador | Mitchell Santana Miyake |
+| **Revisão** | Nome do revisor | Orientador |
+| **Aprovação** | Nome do aprovador | Diretor |
 
-  **Aprovação**           Nome do aprovador       Diretor
-  ----------------------- ----------------------- -----------------------
+## Histórico de Revisões
 
-+:-----------------------:+:-----------------------:+:---------------------------------------------:+
-| **Histórico de revisões**                                                                         |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **N°**                  | **Entregas**            | **Descrição**                                 |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **0**                   | DD/MM/AAAA              | Produção                                      |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **1**                   | DD/MM/AAAA              | Revisão                                       |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **2**                   | DD/MM/AAAA              | Aprovação                                     |
-+-------------------------+-------------------------+-----------------------------------------------+
+| N° | Entregas | Descrição |
+| :---: | :--- | :--- |
+| **0** | DD/MM/AAAA | Produção |
+| **1** | DD/MM/AAAA | Revisão |
+| **2** | DD/MM/AAAA | Aprovação |
 
-**Sumário**
+---
 
-[Contextualização [2](#_Toc1615540245)](#_Toc1615540245)
+## Sumário
+* [Contextualização](#contextualização)
+* [Desenvolvimento](#desenvolvimento)
+  * [Scan the machine, how many ports are open?](#scan-the-machine-how-many-ports-are-open)
+  * [What version of Apache is running?](#what-version-of-apache-is-running)
+  * [What service is running on port 22?](#what-service-is-running-on-port-22)
+  * [Find directories on the web server using the GoBuster tool.](#find-directories-on-the-web-server-using-the-gobuster-tool)
+  * [Find a form to upload and get a reverse shell and find the flag. Find user.txt](#find-a-form-to-upload-and-get-a-reverse-shell-and-find-the-flag-find-usertxt)
+  * [Search for files with SUID permission; which file is weird?](#search-for-files-with-suid-permission-which-file-is-weird)
+  * [Find a form to escalate your privileges.](#find-a-form-to-escalate-your-privileges)
+  * [Root.txt](#roottxt)
+* [Conclusão](#conclusão)
+* [Referências](#referências)
 
-[Desenvolvimento [3](#_Toc132958541)](#_Toc132958541)
+---
 
-[Scan the machine, how many ports are open?
-[3](#_Toc1897472106)](#_Toc1897472106)
+## Contextualização
 
-[What version of Apache is running?
-[3](#_Toc1156425530)](#_Toc1156425530)
+O CTF RootMe da TryHackMe é um desafio de nível para iniciantes focado em uma jornada completa de capture the flag em um ambiente Linux. A sala orienta o jogador através das fases essenciais de um teste de penetração: Reconhecimento (varredura de portas com Nmap e enumeração de diretórios com GoBuster), Obtenção de Shell (encontrando e explorando formulários de upload vulneráveis para obter uma reverse shell), e Escalonamento de Privilégios (procurando por arquivos com permissões SUID ou outras falhas de configuração para obter acesso root).
 
-[What service is running on port 22?
-[3](#_Toc972120563)](#_Toc972120563)
+## Desenvolvimento
 
-[Find directories on the web server using the GoBuster tool.
-[3](#_Toc772619414)](#_Toc772619414)
+### Scan the machine, how many ports are open?
 
-[Find a form to upload and get a reverse shell and find the flag. Find
-user.txt [4](#_Toc1779449691)](#_Toc1779449691)
+Utilizando o nmap podemos escanear quantas portas estão abertas, neste caso duas portas estão abertas.
 
-[Search for files with SUID permission; which file is weird?
-[7](#_Toc720694685)](#_Toc720694685)
+![Imagem Nmap](./media/image4.png)
 
-[Find a form to escalate your privileges.
-[8](#_Toc1767519720)](#_Toc1767519720)
-
-[Root.txt [8](#_Toc482651383)](#_Toc482651383)
-
-[Conclusão [9](#_Toc2018918907)](#_Toc2018918907)
-
-[Referências [9](#_Toc787584339)](#_Toc787584339)
-
-[]{#_Toc1615540245 .anchor}Contextualização
-
-O CTF RootMe da TryHackMe é um desafio de nível para iniciantes focado
-em uma jornada completa de capture the flag em um ambiente Linux. A sala
-orienta o jogador através das fases essenciais de um teste de
-penetração: Reconhecimento (varredura de portas com Nmap e enumeração de
-diretórios com GoBuster), Obtenção de Shell (encontrando e explorando
-formulários de upload vulneráveis para obter uma reverse shell), e
-Escalonamento de Privilégios (procurando por arquivos com permissões
-SUID ou outras falhas de configuração para obter acesso root).
-
-[]{#_Toc132958541 .anchor}Desenvolvimento
-
-[]{#_Toc1897472106 .anchor}Scan the machine, how many ports are open?
-
-Utilizando o nmap podemos escanear quantas portas estão abertas, neste
-caso duas portas estão abertas.
-
-![](./media/image4.png){width="5.90625in" height="2.78125in"}
-
-[]{#_Toc1156425530 .anchor}What version of Apache is running?
+### What version of Apache is running?
 
 Na mesma saída do nmap, encontramos o Apache rodando na versão 2.4.41
 
-[]{#_Toc972120563 .anchor}What service is running on port 22?
+### What service is running on port 22?
 
 O serviço SSH está rodando na porta 22.
 
-[]{#_Toc772619414 .anchor}Find directories on the web server using the
-GoBuster tool.
+### Find directories on the web server using the GoBuster tool.
 
-Seguindo a instrução do CTF, utilizamos o GoBuster para verificar os
-subdiretórios do servidor.
+Seguindo a instrução do CTF, utilizamos o GoBuster para verificar os subdiretórios do servidor.
 
-![](./media/image5.png){width="5.90625in" height="2.65625in"}\
+![Imagem GoBuster](./media/image5.png)
+
 **What is the hidden directory?**
 
 O diretório escondido é /panel.
 
-![](./media/image6.png){width="5.90625in" height="2.8958333333333335in"}
+![Imagem Painel](./media/image6.png)
 
-[]{#_Toc1779449691 .anchor}Find a form to upload and get a reverse shell
-and find the flag. Find user.txt
+### Find a form to upload and get a reverse shell and find the flag. Find user.txt
 
 Utilizando /panel podemos fazer o upload de arquivos como o user.txt
 
-![](./media/image7.png){width="5.90625in" height="2.1041666666666665in"}
+![Imagem Upload](./media/image7.png)
 
-O arquivo user.txt foi enviado com sucesso e está sendo exibido na tela,
-logo podemos tentar utilizar o seguinte script para obter o reverse
-shell.
+O arquivo user.txt foi enviado com sucesso e está sendo exibido na tela, logo podemos tentar utilizar o seguinte script para obter o reverse shell.
 
-![](./media/image8.png){width="5.90625in" height="4.09375in"}Devemos
-também configurar o **netcat** para receber a conexão deste reverse
-shell
+![Imagem Script](./media/image8.png)
 
-![](./media/image9.png){width="5.90625in" height="0.6354166666666666in"}
+Devemos também configurar o **netcat** para receber a conexão deste reverse shell
+
+![Imagem Netcat Configuração](./media/image9.png)
 
 O resultado da tentativa foi o seguinte:
 
-![](./media/imagea.png){width="5.90625in" height="2.90625in"}Arquivos no
-formato .php estão sendo bloqueados, portanto podemos tentar utilizar
-formatos como .php.jpg ou .php5
+![Imagem Resultado Upload](./media/imagea.png)
 
-Utilizando o formato .php5 no script, obtivemos acesso no **netcat** que
-havíamos configurado.
+Arquivos no formato .php estão sendo bloqueados, portanto podemos tentar utilizar formatos como .php.jpg ou .php5
 
-![](./media/imageb.png){width="5.90625in" height="3.6979166666666665in"}
+Utilizando o formato .php5 no script, obtivemos acesso no **netcat** que havíamos configurado.
 
-Logo podemos realizar uma busca utilizando o find para encontrar o
-user.txt
+![Imagem Netcat Acesso](./media/imageb.png)
 
-![](./media/imagec.png){width="5.90625in" height="3.9375in"}Dessa
-maneira encontramos o user.txt e sua flag
+Logo podemos realizar uma busca utilizando o find para encontrar o user.txt
 
-![](./media/imaged.png){width="5.90625in" height="0.875in"}
+![Imagem Busca Find](./media/imagec.png)
 
-[]{#_Toc720694685 .anchor}Search for files with SUID permission; which
-file is weird?
+Dessa maneira encontramos o user.txt e sua flag
 
-Para procurar onde o usuário possui permissões SUID utilizamos o comando
-find / -user root --perm /4000 2\>/dev/null
+![Imagem Flag](./media/imaged.png)
 
-![](./media/imagee.png){width="5.90625in" height="3.40625in"}Nesta saída
-o diretório **/usr/bin/python2.7** parece estar fora de lugar.
+### Search for files with SUID permission; which file is weird?
 
-[]{#_Toc1767519720 .anchor}Find a form to escalate your privileges.
+Para procurar onde o usuário possui permissões SUID utilizamos o comando find / -user root --perm /4000 2>/dev/null
 
-Realizando uma busca de como se aproveitar da vulnerabilidade de
-permissão do diretório **/usr/bin/python2.7** encontramos o seguinte
-comando **python --c 'import os; os.execl("/bin/sh","sh","-p")'**, após
-sua utilização podemos rodar o comando whoami para verificar nosso
-usuário, neste caso obtemos acesso ao usuário root.
+![Imagem Permissões SUID](./media/imagee.png)
 
-![](./media/imagef.png){width="5.90625in" height="3.1770833333333335in"}
+Nesta saída o diretório **/usr/bin/python2.7** parece estar fora de lugar.
 
-[]{#_Toc482651383 .anchor}Root.txt
+### Find a form to escalate your privileges.
 
-Por fim, após obter acesso ao usuário root, utilizamos o comando find
-para encontrar o arquivo root.txt e sua flag
+Realizando uma busca de como se aproveitar da vulnerabilidade de permissão do diretório **/usr/bin/python2.7** encontramos o seguinte comando **python --c 'import os; os.execl("/bin/sh","sh","-p")'**, após sua utilização podemos rodar o comando whoami para verificar nosso usuário, neste caso obtemos acesso ao usuário root.
 
-![](./media/image10.png){width="5.90625in"
-height="1.2291666666666667in"}
+![Imagem Whoami Root](./media/imagef.png)
 
-[]{#_Toc2018918907 .anchor}Conclusão
+### Root.txt
 
-A conclusão do desafio RootMe está centrada na consolidação de uma
-metodologia de pentest ponta a ponta. O aprendizado reforçou a
-importância da enumeração como passo inicial, bem como a exploração de
-vulnerabilidades de upload de arquivos para obter acesso inicial à
-máquina. Mais significativamente, o CTF destacou técnicas de
-escalonamento de privilégios no Linux, ensinando a identificar binários
-SUID mal configurados e a utilizar recursos do sistema operacional para
-passar de um usuário comum para o utilizador root, obtendo domínio total
-do sistema.
+Por fim, após obter acesso ao usuário root, utilizamos o comando find para encontrar o arquivo root.txt e sua flag
 
-[]{#_Toc787584339 .anchor}Referências
+![Imagem Root Flag](./media/image10.png)
 
-- [Write
-  Up](https://beginninghacking.net/2020/09/09/try-hack-me-rootme/)
+## Conclusão
 
-<!-- -->
+A conclusão do desafio RootMe está centrada na consolidação de uma metodologia de pentest ponta a ponta. O aprendizado reforçou a importância da enumeração como passo inicial, bem como a exploração de vulnerabilidades de upload de arquivos para obter acesso inicial à máquina. Mais significativamente, o CTF destacou técnicas de escalonamento de privilégios no Linux, ensinando a identificar binários SUID mal configurados e a utilizar recursos do sistema operacional para passar de um usuário comum para o utilizador root, obtendo domínio total do sistema.
 
-- Script [ReverseShell
-  PHP](https://pentestmonkey.net/tools/web-shells/php-reverse-shell)
-
-<!-- -->
-
-- [Python SUID Exploit](https://gtfobins.github.io/gtfobins/python/)
+## Referências
+* https://beginninghacking.net/2020/09/09/try-hack-me-rootme/
+* https://pentestmonkey.net/tools/web-shells/php-reverse-shell
+* https://gtfobins.github.io/gtfobins/python/

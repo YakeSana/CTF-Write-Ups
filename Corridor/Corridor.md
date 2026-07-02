@@ -1,121 +1,79 @@
-![Uma imagem contendo Logotipo Descrição gerada
-automaticamente](./media/image1.png){width="5.905555555555556in"
-height="2.3361111111111112in"}
+![Logo](./media/image1.png)
 
-Relatório de CTF
+# Relatório de CTF: Corridor -- TryHackMe
 
-Corridor -- TryHackMe
+## Informações do Documento
 
-+:-----------------------------------:+:-------------------------------------:+
-| **Informações do documento**                                                |
-+-------------------------------------+---------------------------------------+
-| **Referência**                      | Corridor -- Mitchell Santana Miyake   |
-+-------------------------------------+---------------------------------------+
-| **N° Revisão**                      | 1                                     |
-+-------------------------------------+---------------------------------------+
-| **Data de publicação**              | 09/11/2025                            |
-+-------------------------------------+---------------------------------------+
-| **Link**                            | <https://tryhackme.com/room/corridor> |
-+-------------------------------------+---------------------------------------+
+| Campo | Detalhe |
+| :--- | :--- |
+| **Referência** | Corridor -- Mitchell Santana Miyake |
+| **N° Revisão** | 1 |
+| **Data de publicação** | 09/11/2025 |
+| **Link** | https://tryhackme.com/room/corridor |
 
-  ----------------------- ----------------------- -----------------------
-  **Redação**             Nome do realizador      Mitchell Santana Miyake
+## Equipe Responsável
 
-  **Revisão**             Nome do revisor         Orientador
+| Função | Nome | Cargo |
+| :--- | :--- | :--- |
+| **Redação** | Nome do realizador | Mitchell Santana Miyake |
+| **Revisão** | Nome do revisor | Orientador |
+| **Aprovação** | Nome do aprovador | Diretor |
 
-  **Aprovação**           Nome do aprovador       Diretor
-  ----------------------- ----------------------- -----------------------
+## Histórico de Revisões
 
-+:-----------------------:+:-----------------------:+:---------------------------------------------:+
-| **Histórico de revisões**                                                                         |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **N°**                  | **Entregas**            | **Descrição**                                 |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **0**                   | DD/MM/AAAA              | Produção                                      |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **1**                   | DD/MM/AAAA              | Revisão                                       |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **2**                   | DD/MM/AAAA              | Aprovação                                     |
-+-------------------------+-------------------------+-----------------------------------------------+
+| N° | Entregas | Descrição |
+| :---: | :--- | :--- |
+| **0** | DD/MM/AAAA | Produção |
+| **1** | DD/MM/AAAA | Revisão |
+| **2** | DD/MM/AAAA | Aprovação |
 
-**Sumário**
+---
 
-[Contextualização [2](#_heading=h.gjdgxs)](#_heading=h.gjdgxs)
+## Sumário
+* [Contextualização](#contextualização)
+* [Desenvolvimento](#desenvolvimento)
+  * [What is the flag?](#what-is-the-flag)
+* [Conclusão](#conclusão)
+* [Referências](#referências)
 
-[Desenvolvimento [3](#_heading=h.1fob9te)](#_heading=h.1fob9te)
+---
 
-[What is the flag? [3](#_Toc1422112865)](#_Toc1422112865)
+## Contextualização
 
-[Conclusão [5](#_heading=h.1t3h5sf)](#_heading=h.1t3h5sf)
+O CTF Corridor do TryHackMe é um desafio de nível fácil, focado na exploração de vulnerabilidades de referência a objeto direto insegura ou IDOR. A sala se apresenta como um ambiente onde o jogador se encontra num "corredor estranho" e precisa encontrar o caminho de volta, examinando os endpoints da URL e identificando valores hexadecimais que se assemelham a hashes. O objetivo é manipular esses identificadores para descobrir localizações do website que não deveriam ser acessíveis e, assim, obter a flag.
 
-[Referências [5](#_heading=h.4d34og8)](#_heading=h.4d34og8)
+## Desenvolvimento
 
-[]{#_heading=h.gjdgxs .anchor}
+### What is the flag?
 
-Contextualização
+Primeiramente, utilizamos o nmap para verificar quais portas estão abertas.
 
-O CTF Corridor do TryHackMe é um desafio de nível fácil, focado na
-exploração de vulnerabilidades de referência a objeto direto insegura ou
-IDOR. A sala se apresenta como um ambiente onde o jogador se encontra
-num \"corredor estranho\" e precisa encontrar o caminho de volta,
-examinando os endpoints da URL e identificando valores hexadecimais que
-se assemelham a hashes. O objetivo é manipular esses identificadores
-para descobrir localizações do website que não deveriam ser acessíveis
-e, assim, obter a flag.
+![Imagem Nmap](./media/image4.png)
 
-[]{#_heading=h.1fob9te .anchor}Desenvolvimento
+A porta 80 está aberta, logo podemos acessar o endereço da máquina pelo navegador.
 
-[]{#_Toc1422112865 .anchor}What is the flag?
+![Imagem Navegador](./media/image5.png)
 
-Primeiramente, utilizamos o nmap para verificar quais portas estão
-abertas.
+Somos recebidos por uma imagem de um corredor, com várias portas clicáveis que redirecionam para salas vazias. Verificando o código fonte da página é perceptível que os links de redirecionamento do parâmetro href se assemelham a hashs, como sugerido na instrução do CTF.
 
-![](./media/image4.png){width="5.90625in" height="1.1354166666666667in"}
+![Imagem Codigo Fonte](./media/image6.png)
 
-A porta 80 está aberta, logo podemos acessar o endereço da máquina pelo
-navegador.
+Utilizando o CrackStation para verificar o hashs, obtemos que eles se tratam de uma sequência de números de um a treze codificados no hash tipo md5, logo o número zero pode representar um dos outros subdomínios.
 
-![](./media/image5.png){width="5.90625in"
-height="2.7395833333333335in"}Somos recebidos por uma imagem de um
-corredor, com várias portas clicáveis que redirecionam para salas
-vazias.
+![Imagem CrackStation](./media/image7.png)
 
-Verificando o código fonte da página é perceptível que os links de
-redirecionamento do parâmetro href se assemelham a hashs, como sugerido
-na instrução do CTF.
+Em seguida obtemos o número zero codificado em md5, utilizando o site 10015 tools.
 
-![](./media/image6.png){width="5.90625in" height="2.6666666666666665in"}
+![Imagem 10015 tools](./media/image8.png)
 
-Utilizando o CrackStation para verificar o hashs, obtemos que eles se
-tratam de uma sequência de números de um a treze codificados no hash
-tipo md5, logo o número zero pode representar um dos outros subdomínios.
+Por fim utilizamos a codificação obtida como parâmetro na url do corredor para obter a flag: **flag{2477ef02448ad9156661ac40a6b8862e}**
 
-![](./media/image7.png){width="5.90625in" height="3.28125in"}
+![Imagem Flag](./media/image9.png)
 
-Em seguida obtemos o número zero codificado em md5, utilizando o site
-10015 tools.
+## Conclusão
 
-![](./media/image8.png){width="5.90625in" height="3.1354166666666665in"}
+A conclusão do desafio Corridor enfatiza o aprendizado prático de como identificar e explorar falhas de referência a objeto direto insegura. O principal aprendizado reside na importância de nunca confiar na complexidade dos identificadores de recursos como hashes ou valores hexadecimais na URL como uma medida de segurança. O exercício demonstrou que, se um identificador direto não for validado estritamente no lado do servidor para garantir que o utilizador autenticado tem permissão para aceder a esse recurso específico, a vulnerabilidade pode ser explorada através da enumeração ou manipulação desses valores.
 
-Por fim utilizamos a codificação obtida como parâmetro na url do
-corredor para obter a flag: **flag{2477ef02448ad9156661ac40a6b8862e}**
-
-![](./media/image9.png){width="5.90625in" height="2.7291666666666665in"}
-
-[]{#_heading=h.1t3h5sf .anchor}Conclusão
-
-A conclusão do desafio Corridor enfatiza o aprendizado prático de como
-identificar e explorar falhas de referência a objeto direto insegura. O
-principal aprendizado reside na importância de nunca confiar na
-complexidade dos identificadores de recursos como hashes ou valores
-hexadecimais na URL como uma medida de segurança. O exercício demonstrou
-que, se um identificador direto não for validado estritamente no lado do
-servidor para garantir que o utilizador autenticado tem permissão para
-aceder a esse recurso específico, a vulnerabilidade pode ser explorada
-através da enumeração ou manipulação desses valores.
-
-[]{#_heading=h.4d34og8 .anchor}Referências
-
-- [CrackStation](https://crackstation.net)
-
-- [10015 tools](https://10015.io/tools/md5-encrypt-decrypt)
+## Referências
+* https://crackstation.net
+* https://10015.io/tools/md5-encrypt-decrypt

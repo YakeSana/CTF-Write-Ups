@@ -1,113 +1,75 @@
-![Uma imagem contendo Logotipo Descrição gerada
-automaticamente](./media/image1.png){width="5.905555555555556in"
-height="2.3361111111111112in"}
+![Logo](./media/image1.png)
 
-Relatório de CTF
+# Relatório de CTF: Neighbour -- TryHackMe
 
-Neighbour -- TryHackMe
+## Informações do Documento
 
-+:-----------------------------------:+:--------------------------------------:+
-| **Informações do documento**                                                 |
-+-------------------------------------+----------------------------------------+
-| **Referência**                      | Neighbour -- Mitchell Santana Miyake   |
-+-------------------------------------+----------------------------------------+
-| **N° Revisão**                      | 1                                      |
-+-------------------------------------+----------------------------------------+
-| **Data de publicação**              | 09/11/2025                             |
-+-------------------------------------+----------------------------------------+
-| **Link**                            | <https://tryhackme.com/room/neighbour> |
-+-------------------------------------+----------------------------------------+
+| Campo | Detalhe |
+| :--- | :--- |
+| **Referência** | Neighbour -- Mitchell Santana Miyake |
+| **N° Revisão** | 1 |
+| **Data de publicação** | 09/11/2025 |
+| **Link** | https://tryhackme.com/room/neighbour |
 
-  ----------------------- ----------------------- -----------------------
-  **Redação**             Nome do realizador      Mitchell Santana Miyake
+## Equipe Responsável
 
-  **Revisão**             Nome do revisor         Orientador
+| Função | Nome | Cargo |
+| :--- | :--- | :--- |
+| **Redação** | Nome do realizador | Mitchell Santana Miyake |
+| **Revisão** | Nome do revisor | Orientador |
+| **Aprovação** | Nome do aprovador | Diretor |
 
-  **Aprovação**           Nome do aprovador       Diretor
-  ----------------------- ----------------------- -----------------------
+## Histórico de Revisões
 
-+:-----------------------:+:-----------------------:+:---------------------------------------------:+
-| **Histórico de revisões**                                                                         |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **N°**                  | **Entregas**            | **Descrição**                                 |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **0**                   | DD/MM/AAAA              | Produção                                      |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **1**                   | DD/MM/AAAA              | Revisão                                       |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **2**                   | DD/MM/AAAA              | Aprovação                                     |
-+-------------------------+-------------------------+-----------------------------------------------+
+| N° | Entregas | Descrição |
+| :---: | :--- | :--- |
+| **0** | DD/MM/AAAA | Produção |
+| **1** | DD/MM/AAAA | Revisão |
+| **2** | DD/MM/AAAA | Aprovação |
 
-**Sumário**
+---
 
-[Contextualização [2](#_heading=h.gjdgxs)](#_heading=h.gjdgxs)
+## Sumário
+* [Contextualização](#contextualização)
+* [Desenvolvimento](#desenvolvimento)
+  * [Find the flag on your neighbor's logged in page!](#find-the-flag-on-your-neighbors-logged-in-page)
+* [Conclusão](#conclusão)
+* [Referências](#referências)
 
-[Desenvolvimento [3](#_heading=h.1fob9te)](#_heading=h.1fob9te)
+---
 
-[Find the flag on your neighbor\'s logged in page!
-[3](#_Toc1879902603)](#_Toc1879902603)
+## Contextualização
 
-[Conclusão [5](#_heading=h.1t3h5sf)](#_heading=h.1t3h5sf)
+A sala "Neighbour" da TryHackMe é um desafio de nível fácil, focado em atividades de red team em um ambiente Linux. O objetivo é explorar falhas em um novo serviço de nuvem, denominado "Authentication Anywhere", onde o jogador deve tentar encontrar e acessar segredos pertencentes a outros usuários, o que geralmente envolve a exploração de referências de objetos diretos inseguras.
 
-[Referências [5](#_heading=h.4d34og8)](#_heading=h.4d34og8)
+## Desenvolvimento
 
-[]{#_heading=h.gjdgxs .anchor}
+### Find the flag on your neighbor's logged in page!
 
-Contextualização
+Primeiramente, utilizamos o nmap para verificar quais portas estão abertas na máquina alvo.
 
-A sala \"Neighbour\" da TryHackMe é um desafio de nível fácil, focado em
-atividades de *red team* em um ambiente Linux. O objetivo é explorar
-falhas em um novo serviço de nuvem, denominado \"Authentication
-Anywhere\", onde o jogador deve tentar encontrar e acessar segredos
-pertencentes a outros usuários, o que geralmente envolve a exploração de
-referências de objetos diretos inseguras.
+![Imagem Nmap](./media/image4.png)
 
-[]{#_heading=h.1fob9te .anchor}Desenvolvimento
+Verificamos que a porta 80 está aberta, logo podemos acessar o endereço da máquina pelo navegador.
 
-[]{#_Toc1879902603 .anchor}Find the flag on your neighbor\'s logged in
-page!
+![Imagem Navegador](./media/image5.png)
 
-Primeiramente, utilizamos o nmap para verificar quais portas estão
-abertas na máquina alvo.
+Somos recebidos por uma página de login, a qual sugere que usuários sem conta utilizem a conta de convidado para logar, ao apertar Ctrl+U como sugerido o código fonte da página é exibido, onde se encontra o login de convidado nos comentários do código.
 
-![](./media/image4.png){width="5.90625in" height="3.4375in"}
+![Imagem Codigo Fonte](./media/image6.png)
 
-Verificamos que a porta 80 está aberta, logo podemos acessar o endereço
-da máquina pelo navegador.
+Utilizando as credenciais de convidado guest:guest obtemos acesso à seguinte página.
 
-![](./media/image5.png){width="5.90625in" height="2.71875in"}
+![Imagem Login Convidado](./media/image7.png)
 
-Somos recebidos por uma página de login, a qual sugere que usuários sem
-conta utilizem a conta de convidado para logar, ao apertar Ctrl+U como
-sugerido o código fonte da página é exibido, onde se encontra o login de
-convidado nos comentários do código.
+O parâmetro user se encontra na url da página, previamente foi citado a existência de um usuário admin, logo podemos tentar substituir guest por admin.
 
-![](./media/image6.png){width="5.90625in" height="4.604166666666667in"}
+![Imagem URL Modificada](./media/image8.png)
 
-Utilizando as credenciais de convidado guest:guest obtemos acesso à
-seguinte página.
+Dessa maneira encontramos a flag : **flag{66be95c478473d91a5358f2440c7af1f}**
 
-![](./media/image7.png){width="5.90625in" height="1.3541666666666667in"}
+## Conclusão
 
-O parâmetro user se encontra na url da página, previamente foi citado a
-existência de um usuário admin, logo podemos tentar substituir guest por
-admin.
+O CTF Neighbour proporcionou um aprendizado valioso, especialmente no reconhecimento de falha de controle de acesso a dados e exploração de vulnerabilidades do tipo IDOR. Demonstrou a importância de validar e restringir estritamente as permissões de acesso aos recursos de um usuário, garantindo que ids não possam ser manipulados para acessar informações de terceiros. Além disso, a sala reforçou as habilidades de enumerar serviços e a importância de revisar o código ou o comportamento da aplicação web para identificar padrões de falhas de autenticação e autorização em ambientes Linux e serviços baseados em nuvem.
 
-![](./media/image8.png){width="5.90625in" height="1.1979166666666667in"}
-
-Dessa maneira encontramos a flag :
-**flag{66be95c478473d91a5358f2440c7af1f}**
-
-[]{#_heading=h.1t3h5sf .anchor}Conclusão
-
-O CTF Neighbour proporcionou um aprendizado valioso, especialmente no
-reconhecimento de falha de controle de acesso a dados e exploração de
-vulnerabilidades do tipo IDOR. Demonstrou a importância de validar e
-restringir estritamente as permissões de acesso aos recursos de um
-usuário, garantindo que ids não possam ser manipulados para acessar
-informações de terceiros. Além disso, a sala reforçou as habilidades de
-enumerar serviços e a importância de revisar o código ou o comportamento
-da aplicação web para identificar padrões de falhas de autenticação e
-autorização em ambientes Linux e serviços baseados em nuvem.
-
-[]{#_heading=h.4d34og8 .anchor}Referências
+## Referências

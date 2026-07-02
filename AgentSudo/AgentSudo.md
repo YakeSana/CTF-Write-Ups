@@ -1,261 +1,179 @@
-![Uma imagem contendo Logotipo Descrição gerada
-automaticamente](./media/image1.png){width="5.905555555555556in"
-height="2.3361111111111112in"}
+![Logo](./media/image1.png)
 
-Relatório de CTF
+# Relatório de CTF: Agent Sudo -- TryHackMe
 
-Agent Sudo -- TryHackMe
+## Informações do Documento
 
-+:-----------------------------------:+:---------------------------------------:+
-| **Informações do documento**                                                  |
-+-------------------------------------+-----------------------------------------+
-| **Referência**                      | Agent Sudo -- Mitchell Santana Miyake   |
-+-------------------------------------+-----------------------------------------+
-| **N° Revisão**                      | 1                                       |
-+-------------------------------------+-----------------------------------------+
-| **Data de publicação**              | 07/11/2025                              |
-+-------------------------------------+-----------------------------------------+
-| **Link**                            | https://tryhackme.com/room/agentsudoctf |
-+-------------------------------------+-----------------------------------------+
+| Campo | Detalhe |
+| :--- | :--- |
+| **Referência** | Agent Sudo -- Mitchell Santana Miyake |
+| **N° Revisão** | 1 |
+| **Data de publicação** | 07/11/2025 |
+| **Link** | https://tryhackme.com/room/agentsudoctf |
 
-  ----------------------- ----------------------- -----------------------
-  **Redação**             Nome do realizador      Mitchell Santana Miyake
+## Equipe Responsável
 
-  **Revisão**             Nome do revisor         Orientador
+| Função | Nome | Cargo |
+| :--- | :--- | :--- |
+| **Redação** | Nome do realizador | Mitchell Santana Miyake |
+| **Revisão** | Nome do revisor | Orientador |
+| **Aprovação** | Nome do aprovador | Diretor |
 
-  **Aprovação**           Nome do aprovador       Diretor
-  ----------------------- ----------------------- -----------------------
+## Histórico de Revisões
 
-+:-----------------------:+:-----------------------:+:---------------------------------------------:+
-| **Histórico de revisões**                                                                         |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **N°**                  | **Entregas**            | **Descrição**                                 |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **0**                   | DD/MM/AAAA              | Produção                                      |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **1**                   | DD/MM/AAAA              | Revisão                                       |
-+-------------------------+-------------------------+-----------------------------------------------+
-| **2**                   | DD/MM/AAAA              | Aprovação                                     |
-+-------------------------+-------------------------+-----------------------------------------------+
+| N° | Entregas | Descrição |
+| :---: | :--- | :--- |
+| **0** | DD/MM/AAAA | Produção |
+| **1** | DD/MM/AAAA | Revisão |
+| **2** | DD/MM/AAAA | Aprovação |
 
-**Sumário**
+---
 
-[Contextualização [2](#_Toc1479295293)](#_Toc1479295293)
+## Sumário
+* [Contextualização](#contextualização)
+* [Desenvolvimento](#desenvolvimento)
+  * [How many open ports?](#how-many-open-ports)
+  * [How you redirect yourself to a secret page?](#how-you-redirect-yourself-to-a-secret-page)
+  * [What is the agent name?](#what-is-the-agent-name)
+  * [FTP password.](#ftp-password)
+  * [Zip file password.](#zip-file-password)
+  * [Steg password.](#steg-password)
+  * [Who is the other agent (in full name)?](#who-is-the-other-agent-in-full-name)
+  * [SSH password.](#ssh-password)
+  * [What is the user flag?](#what-is-the-user-flag)
+  * [CVE number for the escalation.](#cve-number-for-the-escalation-format-cve-xxxx-xxxx)
+  * [What is the root flag?](#what-is-the-root-flag)
+  * [Who is Agent R?](#who-is-agent-r)
+* [Conclusão](#conclusão)
+* [Referências](#referências)
 
-[Desenvolvimento [3](#_Toc342732802)](#_Toc342732802)
+---
 
-[How many open ports? [3](#_Toc1643360377)](#_Toc1643360377)
+## Contextualização
 
-[How you redirect yourself to a secret page?
-[3](#_Toc869237730)](#_Toc869237730)
+O CTF Agent Sudo do TryHackMe é um desafio que simula um teste de invasão a um servidor secreto. O objetivo central foi realizar a escalada de privilégios, o que exigiu a aplicação de técnicas de enumeração, força bruta e exploração de vulnerabilidades específicas para comprometer completamente a máquina alvo e capturar as flags de usuário e root.
 
-[What is the agent name? [4](#_Toc1251126384)](#_Toc1251126384)
+## Desenvolvimento
 
-[FTP password. [4](#_Toc1971783912)](#_Toc1971783912)
+### How many open ports?
 
-[Zip file password. [4](#_Toc624621439)](#_Toc624621439)
+Utilizando o nmap com as configurações -sV e --sC, obtemos que o endereço da maquina possui três portas abertas.
 
-[Steg password. [6](#_Toc1045966290)](#_Toc1045966290)
+![Imagem Nmap](./media/image2.png)
 
-[Who is the other agent (in full name)?
-[7](#_Toc1949463197)](#_Toc1949463197)
+### How you redirect yourself to a secret page?
 
-[SSH password. [8](#_Toc167478154)](#_Toc167478154)
+Como a porta 80 da máquina está aberta podemos acessá-la pelo navegador. Ao abrir a página nos deparamos com a resposta **user-agent.**
 
-[What is the user flag? [8](#_Toc1588734368)](#_Toc1588734368)
+![Imagem Navegador](./media/image3.png)
 
-[CVE number for the escalation. (Format: CVE-xxxx-xxxx)
-[9](#_Toc1804197694)](#_Toc1804197694)
+### What is the agent name?
 
-[What is the root flag? [10](#_Toc523615562)](#_Toc523615562)
+Utilizando requisições curl com os parâmetros A e L podemos realizar um spoofing com as iniciais dos agentes, dessa maneira foi obtido o nome **chris**.
 
-[Who is Agent R? [11](#_Toc103516579)](#_Toc103516579)
+![Imagem Curl](./media/image4.png)
 
-[Conclusão [11](#_Toc751811250)](#_Toc751811250)
+### FTP password.
 
-[Referências [11](#_Toc856275495)](#_Toc856275495)
+Para obter a senha do FTP utilizaremos o Hydra como método de força bruta, passando o usuário obtido como parâmetro e utilizando a wordlist rockyou.txt.
 
-[]{#_Toc1479295293 .anchor}Contextualização
+![Imagem Hydra](./media/image5.png)
 
-O CTF Agent Sudo do TryHackMe é um desafio que simula um teste de
-invasão a um servidor secreto. O objetivo central foi realizar a
-escalada de privilégios, o que exigiu a aplicação de técnicas de
-enumeração, força bruta e exploração de vulnerabilidades específicas
-para comprometer completamente a máquina alvo e capturar as flags de
-usuário e root.
+Dessa maneira foi obtida a senha **crystal** para o usuário chris.
 
-[]{#_Toc342732802 .anchor}Desenvolvimento
+### Zip file password.
 
-[]{#_Toc1643360377 .anchor}How many open ports?
+Primeiramente devemos nos conectar ao servidor FTP utilizando as credenciais previamente obtidas.
 
-Utilizando o nmap com as configurações -sV e --sC, obtemos que o
-endereço da maquina possui três portas abertas.
+![Imagem FTP](./media/image6.png)
 
-![](./media/image2.png){width="5.90625in" height="3.5729166666666665in"}
+Para então obter os arquivos do servidor utilizando o comando **mget.**
 
-[]{#_Toc869237730 .anchor}How you redirect yourself to a secret page?
+![Imagem Mget](./media/image7.png)
 
-Como a porta 80 da máquina está aberta podemos acessá-la pelo navegador.
-Ao abrir a página nos deparamos com a resposta **user-agent.**
+Ao ler um dos arquivos obtidos, recebemos uma mensagem que sugere que as imagens possuem arquivos escondidos.
 
-![](./media/image3.png){width="5.90625in" height="1.5625in"}
+![Imagem Mensagem](./media/image8.png)
 
-[]{#_Toc1251126384 .anchor}What is the agent name?
+Para verificar se as imagens escondem algo e extrair tais conteudos, utilizaremos o **BinWalk.**
 
-Utilizando requisições curl com os parâmetros A e L podemos realizar um
-spoofing com as iniciais dos agentes, dessa maneira foi obtido o nome
-**chris**.
+![Imagem BinWalk](./media/image9.png)
 
-![](./media/image4.png){width="5.90625in" height="2.4166666666666665in"}
+Logo percebemos que o diretorio _cutie.png.extracted foi extraido da imagem, para obter a senha do arquivo zip dentro dele utilizaremos as ferramentas do johntheripper, como o zip2john e o john. Dessa maneira foi obtida a senha **alien**.
 
-[]{#_Toc1971783912 .anchor}FTP password.
+![Imagem John](./media/image10.png)
 
-Para obter a senha do FTP utilizaremos o Hydra como método de força
-bruta, passando o usuário obtido como parâmetro e utilizando a wordlist
-rockyou.txt.
-
-![](./media/image5.png){width="5.90625in"
-height="0.8020833333333334in"}Dessa maneira foi obtida a senha
-**crystal** para o usuário chris.
-
-[]{#_Toc624621439 .anchor}Zip file password.
-
-Primeiramente devemos nos conectar ao servidor FTP utilizando as
-credenciais previamente obtidas.
-
-![](./media/image6.png){width="5.90625in"
-height="2.7395833333333335in"}Para então obter os arquivos do servidor
-utilizando o comando **mget.**
-
-![](./media/image7.png){width="5.90625in" height="2.6770833333333335in"}
-
-Ao ler um dos arquivos obtidos, recebemos uma mensagem que sugere que as
-imagens possuem arquivos escondidos.
-
-![](./media/image8.png){width="5.90625in" height="0.6875in"}
-
-Para verificar se as imagens escondem algo e extrair tais conteudos,
-utilizaremos o **BinWalk.**
-
-![](./media/image9.png){width="5.90625in" height="1.2291666666666667in"}
-
-Logo percebemos que o diretorio \_cutie.png.extracted foi extraido da
-imagem, para obter a senha do arquivo zip dentro dele utilizaremos as
-ferramentas do johntheripper, como o zip2john e o john. Dessa maneira
-foi obtida a senha **alien**.
-
-![](./media/image10.png){width="5.90625in"
-height="1.9791666666666667in"}
-
-[]{#_Toc1045966290 .anchor}Steg password.
+### Steg password.
 
 Em seguida, utilizamos o 7z para descompactar o pacote.
 
-![](./media/image11.png){width="5.90625in"
-height="3.2291666666666665in"}
+![Imagem 7z](./media/image11.png)
 
 Para enfim obter a senha criptografada na mensagem a seguir.
 
-![](./media/image12.png){width="5.90625in"
-height="1.5520833333333333in"}
+![Imagem Senha](./media/image12.png)
 
-Para decodificar a senha utilizamos o
-[CyberChef,](https://gchq.github.io/CyberChef/?ref=blog.qz.sg) que
-identificou a codificação de base64. Dessa maneira foi obtida a senha
-**Area51**.
+Para decodificar a senha utilizamos o CyberChef, que identificou a codificação de base64. Dessa maneira foi obtida a senha **Area51**.
 
-![](./media/image13.png){width="5.90625in"
-height="3.9895833333333335in"}
+![Imagem CyberChef](./media/image13.png)
 
-[]{#_Toc1949463197 .anchor}Who is the other agent (in full name)?
+### Who is the other agent (in full name)?
 
-Utilizando a senha obtida e o steghide podemos verificar informações
-escondidas na outra imagem. Dessa maneira foi obtida o nome do outro
-agente, james.
+Utilizando a senha obtida e o steghide podemos verificar informações escondidas na outra imagem. Dessa maneira foi obtida o nome do outro agente, james.
 
-![](./media/image14.png){width="5.90625in" height="2.53125in"}
+![Imagem Steghide](./media/image14.png)
 
-[]{#_Toc167478154 .anchor}SSH password.
+### SSH password.
 
-O último passo também inclui uma senha, neste caso **hackerrules!** é a
-senha do SSH.
+O último passo também inclui uma senha, neste caso **hackerrules!** é a senha do SSH.
 
-![](./media/image15.png){width="5.90625in"
-height="3.9479166666666665in"}
+![Imagem SSH](./media/image15.png)
 
-[]{#_Toc1588734368 .anchor}What is the user flag?
+### What is the user flag?
 
-Realizando uma varredura simples nos arquivos do usuário, obtemos a flag
-**b03d975e8c92a7c04146cfa7a5a313c7**
+Realizando uma varredura simples nos arquivos do usuário, obtemos a flag **b03d975e8c92a7c04146cfa7a5a313c7**
 
-![](./media/image16.png){width="5.90625in"
-height="0.3854166666666667in"}
+![Imagem User Flag](./media/image16.png)
 
 **What is the incident of the photo called?**
 
-Realizando uma busca de imagem utilizando o TinEye, obtemos o seguinte
-resultado.
+Realizando uma busca de imagem utilizando o TinEye, obtemos o seguinte resultado.
 
-![](./media/image17.png){width="5.90625in" height="2.25in"}
+![Imagem TinEye](./media/image17.png)
 
-O TinEye mostra um artigo que descreve o incidente da foto, neste caso:
-**Roswell alien autopsy**
+O TinEye mostra um artigo que descreve o incidente da foto, neste caso: **Roswell alien autopsy**
 
-![](./media/image18.png){width="5.90625in"
-height="2.4895833333333335in"}
+![Imagem Artigo](./media/image18.png)
 
-[]{#_Toc1804197694 .anchor}CVE number for the escalation. (Format:
-CVE-xxxx-xxxx)
+### CVE number for the escalation. (Format: CVE-xxxx-xxxx)
 
-Para realizar o escalamento verificamos as permissoes de usuario do root
-que james possui com o comando sudo --l.
+Para realizar o escalamento verificamos as permissoes de usuario do root que james possui com o comando sudo --l.
 
-![](./media/image19.png){width="5.90625in" height="0.71875in"}
+![Imagem Sudo](./media/image19.png)
 
-Fazendo uma pesquisa de vulnerabilidades sobre (ALL, !root) /bin/bash
-encontramos o seguinte CVE: CVE-2019-14287
+Fazendo uma pesquisa de vulnerabilidades sobre (ALL, !root) /bin/bash encontramos o seguinte CVE: CVE-2019-14287
 
-![](./media/image20.png){width="5.90625in"
-height="2.5104166666666665in"}
+![Imagem CVE](./media/image20.png)
 
-[]{#_Toc523615562 .anchor}What is the root flag?
+### What is the root flag?
 
-De acordo com o registro de vulnerabilidade, versões do sudo inferiores
-a 1.8.28, permitem o login não autorizado ao usuário root utilizando
-sudo -u \\#\$((0xffffffff))
+De acordo com o registro de vulnerabilidade, versões do sudo inferiores a 1.8.28, permitem o login não autorizado ao usuário root utilizando sudo -u \\#\$((0xffffffff))
 
-![](./media/image21.png){width="5.3340780839895015in"
-height="0.8647036307961505in"}
+![Imagem Exploit](./media/image21.png)
 
-Navegando até os arquivos do usuário root e verificando seus arquivos,
-obtemos a a flag **b53a02f55b57d4439e3341834d70c062**
+Navegando até os arquivos do usuário root e verificando seus arquivos, obtemos a a flag **b53a02f55b57d4439e3341834d70c062**
 
-![](./media/image22.png){width="5.90625in"
-height="2.1770833333333335in"}
+![Imagem Root Flag](./media/image22.png)
 
-[]{#_Toc103516579 .anchor}Who is Agent R?
+### Who is Agent R?
 
-O arquivo root.txt também inclui o nome do Agent R, seu nome é
-**DesKel.**
+O arquivo root.txt também inclui o nome do Agent R, seu nome é **DesKel.**
 
-[]{#_Toc751811250 .anchor}Conclusão
+## Conclusão
 
-A conclusão deste CTF demonstrou o valor da metodologia estruturada no
-pentesting. O principal aprendizado foi o aprimoramento prático em
-técnicas de enumeração eficaz utilizando ferramentas como GoBuster e
-Nmap, essenciais para descobrir o acesso inicial. O desafio exigiu
-domínio em análise forense básica, utilizando o Binwalk, e culminou em
-uma aplicação crítica de escalada de privilégios, reforçando a
-capacidade de identificar e explorar vulnerabilidades específicas para
-alcançar o controle de root. O sucesso neste CTF traduziu o conhecimento
-teórico em habilidades acionáveis, comprovando a importância da
-persistência e da correlação de informações para a resolução completa de
-um cenário de segurança.
+A conclusão deste CTF demonstrou o valor da metodologia estruturada no pentesting. O principal aprendizado foi o aprimoramento prático em técnicas de enumeração eficaz utilizando ferramentas como GoBuster e Nmap, essenciais para descobrir o acesso inicial. O desafio exigiu domínio em análise forense básica, utilizando o Binwalk, e culminou em uma aplicação crítica de escalada de privilégios, reforçando a capacidade de identificar e explorar vulnerabilidades específicas para alcançar o controle de root. O sucesso neste CTF traduziu o conhecimento teórico em habilidades acionáveis, comprovando a importância da persistência e da correlação de informações para a resolução completa de um cenário de segurança.
 
-[]{#_Toc856275495 .anchor}Referências
-
-- [WriteUp](https://blog.qz.sg/agent-sudo-ctf-tryhackme/)
-
-- [BinWalk](https://www.kali.org/tools/binwalk/)
-
-- [Exploit](https://www.exploit-db.com/exploits/47502)
+## Referências
+* https://blog.qz.sg/agent-sudo-ctf-tryhackme/
+* https://www.kali.org/tools/binwalk/
+* https://www.exploit-db.com/exploits/47502
